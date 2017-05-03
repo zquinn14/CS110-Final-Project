@@ -12,6 +12,8 @@ GREY = (100, 100, 150)
 
 
 class Paddle(pygame.sprite.Sprite):
+    state = 0
+
     def __init__(self):
         super().__init__()
         self.paddleY = 440
@@ -23,11 +25,11 @@ class Paddle(pygame.sprite.Sprite):
         self.key_press = 0
 
         self.screenWidth = 640
-        self.screenHeight = 400
+        self.screenHeight = 480
 
         self.image = pygame.Surface([self.paddleWidth, self.paddleHeight])
         self.rect = self.image.get_rect()
-        self.rect.x = (self.screenWidth- self.paddleWidth) / 2
+        self.rect.x = (self.screenWidth - self.paddleWidth) / 2
         self.rect.y = 440
         self.image.fill(GREY)
 
@@ -45,8 +47,8 @@ class Paddle(pygame.sprite.Sprite):
 
         elif (key_press == 2):
             self.paddle_x_change = 8
-        elif key_press == 2 and self.rect.x >= 580:
-            self.rect.x = 580
+        elif key_press == 2 and self.rect.x >= 480:
+            self.rect.x = 480
 
 class Ball(pygame.sprite.Sprite):
     angle = random.randrange(-45,45)
@@ -177,7 +179,7 @@ class Controller(pygame.sprite.Sprite):
         key_press = 0
 
         """GAME LOOP"""
-        while not gameExit:
+        while True:
 
             clock.tick(60)
             self.gameDisplay.fill(GREENISH)
@@ -186,36 +188,30 @@ class Controller(pygame.sprite.Sprite):
                 if event.type == pygame.QUIT:
                     sys.exit()
 
-            # if not gameExit:
-            #     self.p.rect.x += (self.p.paddle_x_change)
-            #     gameExit = self.b.update(self.state)
-
             """COLLISION HANDLING"""
             if pygame.sprite.spritecollide(self.p, self.ballGroup, False):
                 control = (self.p.rect.x + self.p.paddleWidth / 2) - (self.b.rect.x + self.b.ballRadius / 2)
                 self.b.rect.y = 432
                 self.b.rebound(control)
 
-                """Helps make ball bounce smoothly of paddle"""
+                """Helps make ball bounce smoothly off paddle"""
                 if not gameExit:
                     gameExit = self.b.update(self.state)
 
-            # if gameExit and len(self.bricks) != 0 and self.b.rect.y < 432:
-            #     msg = typicalFont.render("LOST", 1, WHITE)
-            #     msgpos = msg.get_rect(centerx = 320)
-            #     msgpos.bottom = 230
-            #     self.gameDisplay.blit(msg, msgpos)
-
+            if len(self.bricks) != 0 and self.b.rect.y > 440:
+                msg = typicalFont.render("LOST", 1, WHITE)
+                msgpos = msg.get_rect(centerx = 320)
+                msgpos.bottom = 230
+                self.gameDisplay.blit(msg, msgpos)
 
             hitBlocks = pygame.sprite.spritecollide(self.b, self.bricks, True)
             if len(hitBlocks) > 0:
                 self.b.rebound(0)
-                if len(self.bricks) == 0:
-                    winmsg = typicalFont.render('Winner Winner Chicken Dinner', 0, WHITE)
-                    winmsgpos = winmsg.get_rect(centerx = 320)
-                    winmsgpos.bottom = 230
-                    self.gameDisplay.blit(winmsg, winmsgpos)
-                    gameExit = True
+            if len(self.bricks) == 0:
+                winmsg = typicalFont.render('Winner Winner Chicken Dinner', 0, WHITE)
+                winmsgpos = winmsg.get_rect(centerx = 320)
+                winmsgpos.bottom = 230
+                self.gameDisplay.blit(winmsg, winmsgpos)
 
             """PADDLE CONTROL"""
             if event.type == pygame.KEYUP:
@@ -245,6 +241,10 @@ class Controller(pygame.sprite.Sprite):
 
         pygame.quit
         quit()
+
+    # @classmethod
+    # def getHiScor(cls):
+
 
 if __name__ == '__main__':
     run = Controller()
