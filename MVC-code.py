@@ -57,9 +57,7 @@ class Ball(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.p = Paddle()
-        #self.ballRadius = 8
-        #self.speed = 8 #MIGHT NOT NEED
-        #self.angle = 180
+
         self.screenWidth = 640
 
         self.image = pygame.Surface([self.ballRadius, self.ballRadius])
@@ -76,13 +74,14 @@ class Ball(pygame.sprite.Sprite):
     def update(self, state=0):
         if state == 1:
             """BALL LOCATION UPDATE"""
-            self.directionRad = math.radians(self.angle) #CONVERTS DIRECTION ANGLE TO RADIANS
+            # CONVERTS DIRECTION ANGLE TO RADIANS
+            directionRad = math.radians(self.angle)
             #self.xcomp = self.rect.x
             #self.ycomp = self.rect.y
 
             """ANGLE RADIAN CONVERSION TO SIN AND COS"""
-            self.xcomp += self.speed * math.sin(self.directionRad)
-            self.ycomp -= self.speed * math.cos(self.directionRad)
+            self.xcomp += self.speed * math.sin(directionRad)
+            self.ycomp -= self.speed * math.cos(directionRad)
 
             """CHANGES X AND Y OF BALL COORDINATE"""
             self.rect.x = self.xcomp
@@ -93,10 +92,10 @@ class Ball(pygame.sprite.Sprite):
                 self.rebound(0)
                 self.ycomp = 1
             if self.xcomp <= 0:
-                self.angle = (360 - self.angle)
+                self.angle = (360 - self.angle) % 360
                 self.xcomp = 1
             if self.xcomp > (self.screenWidth - self.ballRadius):
-                self.angle = (360 - self.angle)
+                self.angle = (360 - self.angle) % 360
                 self.xcomp = (self.screenWidth - self.ballRadius) - 1
             if self.ycomp > 480:
                 return True
@@ -132,125 +131,97 @@ class Brick(pygame.sprite.Sprite):
 
 class Controller(pygame.sprite.Sprite):
 
-    pygame.init()
+    """Class Variables:"""
 
+    #Screen Dimensions
     displayDimensions = (640,480)
-    gameDisplay = pygame.display.set_mode(displayDimensions)
-    pygame.display.set_caption('Brick Ball!')
 
-    bricks = pygame.sprite.Group()
-    ballGroup = pygame.sprite.Group()
-    allSprites = pygame.sprite.Group()
-
-    p = Paddle()
-    allSprites.add(p)
-
-    b = Ball()
-    allSprites.add(b)
-    ballGroup.add(b)
-
-    #bricks
+    #Brick Number and height from top
     topBrick = 80
     bricksNum = 12
-    Brick.build_bricks(bricks, bricksNum, topBrick, allSprites)
-
-    typicalFont = pygame.font.SysFont('Helvetica', 80, bold = True)
-
-    clock = pygame.time.Clock()
-
-    # state = 0
-
 
     def __init__(self):
         super().__init__()
+
         """PYGAME INITIALIZATION"""
-        #pygame.init()
+        pygame.init()
 
-        """CLASS INSTANCES"""
-        # self.b = Ball()
-        # self.p = Paddle()
-
-        #self.brick = Brick(WHITE, 0,0)
-
-        """WINDOW DIMENSIONS"""
-        # self.displayDimensions = (640,480)
-        # self.gameDisplay = pygame.display.set_mode(self.displayDimensions)
-        # pygame.display.set_caption('Brick Ball!')
+        """Setup of window or screen"""
+        self.gameDisplay = pygame.display.set_mode(self.displayDimensions)
+        pygame.display.set_caption('Brick Ball!')
 
         """SPRITE GROUPS"""
-        # self.bricks = pygame.sprite.Group()
-        # self.ballGroup = pygame.sprite.Group()
-        # self.allSprites = pygame.sprite.Group()
+        self.bricks = pygame.sprite.Group()
+        self.ballGroup = pygame.sprite.Group()
+        self.allSprites = pygame.sprite.Group()
 
-        # self.allSprites.add(self.p)
+        """PADDLE"""
+        self.p = Paddle()
+        self.allSprites.add(self.p)
 
-        # self.ballGroup.add(self.b)
-        # self.allSprites.add(self.b)
+        """BALL"""
+        self.b = Ball()
+        self.allSprites.add(self.b)
+        self.ballGroup.add(self.b)
 
-        """BLOCK CREATION"""
-        # topBrick = 80
-        # bricksNum = 12
-        # self.brick.build_bricks(self.bricks, bricksNum, topBrick, self.allSprites)
+        """BRICK CREATION - calls class variables"""
+        Brick.build_bricks(self.bricks, self.bricksNum, self.topBrick, self.allSprites)
 
-        #print(self.bricks)
-        """FONT"""
-        # self.typicalFont = pygame.font.SysFont('Helvetica', 80, bold = True)
-
-        #LOGEN Edit
+        """Initialize state value"""
         self.state = 0
 
     def game(self):
-        # clock = pygame.time.Clock()
-
-        #self.state = 0
+        clock = pygame.time.Clock()
+        typicalFont = pygame.font.SysFont('Helvetica', 50, bold=True)
         gameExit = False
         key_press = 0
 
         """GAME LOOP"""
         while not gameExit:
+
+            clock.tick(60)
+            self.gameDisplay.fill(GREENISH)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
-                    #gameExit = True
 
-                """COLLISION HANDLING"""
+            # if not gameExit:
+            #     self.p.rect.x += (self.p.paddle_x_change)
+            #     gameExit = self.b.update(self.state)
+
+            """COLLISION HANDLING"""
             if pygame.sprite.spritecollide(self.p, self.ballGroup, False):
-                control = (int(self.p.rect.x) + (self.p.paddleWidth / 2)) - (int(self.b.rect.x) + (self.b.ballRadius / 2))
+                control = (self.p.rect.x + self.p.paddleWidth / 2) - (self.b.rect.x + self.b.ballRadius / 2)
                 self.b.rect.y = 432
                 self.b.rebound(control)
 
-                #"""
+                """Helps make ball bounce smoothly of paddle"""
                 if not gameExit:
                     gameExit = self.b.update(self.state)
 
-                if gameExit and len(self.bricks) != 0:#and b.rect.y < 440:
-                    msg = self.typicalFont.render("LOST", 1, WHITE)
-                    msgpos = msg.get_rect(centerx = 320)
-                    msgBottom = 180
-                    self.gameDisplay.blit(msg, msgpos)
-                #"""
+            # if gameExit and len(self.bricks) != 0 and self.b.rect.y < 432:
+            #     msg = typicalFont.render("LOST", 1, WHITE)
+            #     msgpos = msg.get_rect(centerx = 320)
+            #     msgpos.bottom = 230
+            #     self.gameDisplay.blit(msg, msgpos)
+
 
             hitBlocks = pygame.sprite.spritecollide(self.b, self.bricks, True)
             if len(hitBlocks) > 0:
                 self.b.rebound(0)
-            if len(hitBlocks) == 0:
-                #gameExit = True
-                winmsg = self.typicalFont.render('Winner Winner Chicken Dinner', 0, WHITE)
-                winmsgpos = winmsg.get_rect(centerx = 400)
-                winmsgBottom = 300
-                self.gameDisplay.blit(winmsg, winmsgpos)
+                if len(self.bricks) == 0:
+                    winmsg = typicalFont.render('Winner Winner Chicken Dinner', 0, WHITE)
+                    winmsgpos = winmsg.get_rect(centerx = 320)
+                    winmsgpos.bottom = 230
+                    self.gameDisplay.blit(winmsg, winmsgpos)
+                    gameExit = True
 
-                # if event.type == pygame.KEYDOWN:
-                #     if event.key == pygame.K_SPACE:
-                #         if self.state == 1:
-                #             self.b.update()
-                #             print('Yea it works')
-
-                """PADDLE CONTROL"""
-                if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_SPACE or event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                        key_press = 0
-                        self.p.movePaddle(key_press)
+            """PADDLE CONTROL"""
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    key_press = 0
+                    self.p.movePaddle(key_press)
 
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT] and self.state == 1:
@@ -263,10 +234,6 @@ class Controller(pygame.sprite.Sprite):
 
             elif keys[pygame.K_SPACE] and self.state == 0:
                 self.state = 1
-                print(3)
-                print(self.b.speed)
-
-            self.gameDisplay.fill(GREENISH)
 
             self.allSprites.draw(self.gameDisplay)
 
@@ -275,7 +242,6 @@ class Controller(pygame.sprite.Sprite):
             self.b.update(self.state)
 
             pygame.display.update()
-            self.clock.tick(60)
 
         pygame.quit
         quit()
