@@ -24,7 +24,6 @@ green = (0, 100, 0)
 yellow = (255, 165, 0)
 lightyellow = (255, 255, 0)
 blue = (60, 179, 113)
-midnight = (25, 25, 112)
 purple = (148, 0, 211)
 gray = (139, 139, 131)
 
@@ -94,7 +93,7 @@ def game_instructions():
                 pygame.quit()
                 quit()
 
-        screen.fill(midnight)
+        screen.fill(black)
         message_to_screen("BLOCKBUSTERS", blue, -250, "medium")
         message_to_screen("Introduction: One morning, four plucky young CS 110 students", gray, -200, "small")
         message_to_screen("came together with the dream of recreating the classic game", gray, -170, "small")
@@ -129,7 +128,7 @@ def start_screen():
                 pygame.quit()
                 quit()
 
-        screen.fill(midnight)
+        screen.fill(black)
         message_to_screen("BLOCKBUSTERS", blue, -100, "large")
         message_to_screen("PRESS PLAY TO BEGIN", purple, 50, "medium")
 
