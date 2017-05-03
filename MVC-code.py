@@ -198,20 +198,25 @@ class Controller(pygame.sprite.Sprite):
                 if not gameExit:
                     gameExit = self.b.update(self.state)
 
+            """Displays Lost Message"""
             if len(self.bricks) != 0 and self.b.rect.y > 440:
-                msg = typicalFont.render("LOST", 1, WHITE)
+                msg = typicalFont.render("LOST!", 1, WHITE)
                 msgpos = msg.get_rect(centerx = 320)
                 msgpos.bottom = 230
                 self.gameDisplay.blit(msg, msgpos)
+                gameExit = True
 
             hitBlocks = pygame.sprite.spritecollide(self.b, self.bricks, True)
             if len(hitBlocks) > 0:
                 self.b.rebound(0)
+                
+            """Displays Win Message"""
             if len(self.bricks) == 0:
-                winmsg = typicalFont.render('Winner Winner Chicken Dinner', 0, WHITE)
+                winmsg = typicalFont.render('Winner!', 0, WHITE)
                 winmsgpos = winmsg.get_rect(centerx = 320)
                 winmsgpos.bottom = 230
                 self.gameDisplay.blit(winmsg, winmsgpos)
+                gameExit = True
 
             """PADDLE CONTROL"""
             if event.type == pygame.KEYUP:
@@ -233,7 +238,9 @@ class Controller(pygame.sprite.Sprite):
 
             self.allSprites.draw(self.gameDisplay)
 
-            self.p.rect.x += (self.p.paddle_x_change)
+            """If statement --> when game is active, paddle can move"""
+            if not gameExit:
+                self.p.rect.x += (self.p.paddle_x_change)
 
             self.b.update(self.state)
 
@@ -244,7 +251,6 @@ class Controller(pygame.sprite.Sprite):
 
     # @classmethod
     # def getHiScor(cls):
-
 
 if __name__ == '__main__':
     run = Controller()
