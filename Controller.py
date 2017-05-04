@@ -173,3 +173,4 @@ class Controller(pygame.sprite.Sprite):
 if __name__ == '__main__':
     run = Controller()
     run.play()
+    
