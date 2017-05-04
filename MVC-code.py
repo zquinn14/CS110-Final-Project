@@ -2,6 +2,7 @@ import pygame
 import math
 import random
 import sys
+import proj_GUI
 
 """"COLORS"""
 WHITE = (255, 255, 255)
@@ -9,7 +10,6 @@ BLACK = (0, 0, 0)
 GREENISH = (0, 50, 50)
 BLUEISH = (0, 255, 204)
 GREY = (100, 100, 150)
-
 
 class Paddle(pygame.sprite.Sprite):
     state = 0
@@ -37,18 +37,12 @@ class Paddle(pygame.sprite.Sprite):
         """x = 1 is the left arrow
         x = 2 is the right arrow
         x = 3 is the spacebar"""
-
         if key_press == 0:
             self.paddle_x_change = 0
         if key_press == 1:
             self.paddle_x_change = -8
-        elif key_press == 1 and self.rect.x <= 0:
-            self.rect.x = 0
-
         elif (key_press == 2):
             self.paddle_x_change = 8
-        elif key_press == 2 and self.rect.x >= 480:
-            self.rect.x = 480
 
 class Ball(pygame.sprite.Sprite):
     angle = random.randrange(-45,45)
@@ -131,6 +125,18 @@ class Brick(pygame.sprite.Sprite):
                 allSprites.add(brick)
             brk_top += cls.height + 2
 
+class Wall(pygame.sprite.Sprite):
+    def __init__(self, x, y, width, height):
+        super().__init__()
+
+        self.wallWidth = width
+        self.wallHeight = height
+        self.image = pygame.Surface([self.wallWidth, self.wallHeight])
+        self.rect = self.image.get_rect()
+        self.image.fill(GREENISH)
+        self.rect.x = x
+        self.rect.y = y
+
 class Controller(pygame.sprite.Sprite):
 
     """Class Variables:"""
@@ -150,7 +156,7 @@ class Controller(pygame.sprite.Sprite):
 
         """Setup of window or screen"""
         self.gameDisplay = pygame.display.set_mode(self.displayDimensions)
-        pygame.display.set_caption('Brick Ball!')
+        pygame.display.set_caption('BLOCKBUSTER!')
 
         """SPRITE GROUPS"""
         self.bricks = pygame.sprite.Group()
@@ -166,11 +172,27 @@ class Controller(pygame.sprite.Sprite):
         self.allSprites.add(self.b)
         self.ballGroup.add(self.b)
 
+        """WALL CREATION"""
+        self.wall_list = pygame.sprite.Group()
+
+        self.wall = Wall(-100, 430, 1, 20)
+        self.wall_list.add(self.wall)
+        self.allSprites.add(self.wall)
+
+        self.wall = Wall(740, 430, 1, 20)
+        self.wall_list.add(self.wall)
+        self.allSprites.add(self.wall)
+
+        self.p.walls = self.wall_list
+
         """BRICK CREATION - calls class variables"""
         Brick.build_bricks(self.bricks, self.bricksNum, self.topBrick, self.allSprites)
 
         """Initialize state value"""
         self.state = 0
+
+    def play(self):
+        proj_GUI.start_screen()
 
     def game(self):
         clock = pygame.time.Clock()
@@ -187,6 +209,11 @@ class Controller(pygame.sprite.Sprite):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
+
+                """Pauses Game - state changes to 2"""
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p and self.state == 1:
+                        proj_GUI.pause()
 
             """COLLISION HANDLING"""
             if pygame.sprite.spritecollide(self.p, self.ballGroup, False):
@@ -205,26 +232,30 @@ class Controller(pygame.sprite.Sprite):
                 msgpos.bottom = 230
                 self.gameDisplay.blit(msg, msgpos)
                 gameExit = True
+                proj_GUI.game_over()
 
             hitBlocks = pygame.sprite.spritecollide(self.b, self.bricks, True)
             if len(hitBlocks) > 0:
                 self.b.rebound(0)
-                
+
             """Displays Win Message"""
             if len(self.bricks) == 0:
-                winmsg = typicalFont.render('Winner!', 0, WHITE)
-                winmsgpos = winmsg.get_rect(centerx = 320)
-                winmsgpos.bottom = 230
-                self.gameDisplay.blit(winmsg, winmsgpos)
-                gameExit = True
+                #gameExit = True
+                start_again = Controller()
+                start_again.game()
 
             """PADDLE CONTROL"""
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_SPACE or event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                    key_press = 0
-                    self.p.movePaddle(key_press)
+            try:
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_SPACE or event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                        key_press = 0
+                        self.p.movePaddle(key_press)
+            except UnboundLocalError:
+                start_again = Controller()
+                start_again.game()
 
             keys = pygame.key.get_pressed()
+
             if keys[pygame.K_LEFT] and self.state == 1:
                 key_press = 1
                 self.p.movePaddle(key_press)
@@ -235,6 +266,14 @@ class Controller(pygame.sprite.Sprite):
 
             elif keys[pygame.K_SPACE] and self.state == 0:
                 self.state = 1
+
+            """WRAP PADDLE"""
+            paddle_collision_checks = pygame.sprite.spritecollide(self.p, self.wall_list, False)
+            for i in paddle_collision_checks:
+                if self.p.paddle_x_change > 0:#MOVING TO THE RIGHT
+                    self.p.rect.x = 0
+                else:
+                    self.p.rect.x = self.displayDimensions[0] - self.p.paddleWidth
 
             self.allSprites.draw(self.gameDisplay)
 
@@ -254,4 +293,4 @@ class Controller(pygame.sprite.Sprite):
 
 if __name__ == '__main__':
     run = Controller()
-    run.game()
+    run.play()
