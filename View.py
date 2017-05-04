@@ -29,8 +29,8 @@ gray = (139, 139, 131)
 
 #font options
 smallfont = pygame.font.SysFont('serif', 25, bold=True)
-mediumfont = pygame.font.SysFont('serif', 50, bold=True)
-largefont = pygame.font.SysFont('serif', 80, bold=True)
+mediumfont = pygame.font.SysFont('serif', 40, bold=True)
+largefont = pygame.font.SysFont('serif', 70, bold=True)
 
 
 def text_objects(text, color, size):
@@ -101,9 +101,9 @@ def game_instructions():
         message_to_screen("Instructions:", white, -50, "medium")
         message_to_screen("Use the left and right arrows to move the paddle", gray, 0)
         message_to_screen("Press p to pause game", gray, 40)
-        button("Play", 150, 500, 100, 50, green, lightgreen, action = "Play")
-        button("Main Menu", 325, 500, 150, 50, yellow, lightyellow, action = "Main Menu")
-        button("Quit", 550, 500, 100, 50, red, lightred, action = "Quit")
+        button("Play", 75, 400, 100, 50, green, lightgreen, action = "Play")
+        button("Main Menu", 250, 400, 150, 50, yellow, lightyellow, action = "Main Menu")
+        button("Quit", 475, 400, 100, 50, red, lightred, action = "Quit")
         pygame.display.flip()
         clock.tick(15)
 
@@ -132,9 +132,9 @@ def start_screen():
         message_to_screen("BLOCKBUSTERS", blue, -100, "large")
         message_to_screen("PRESS PLAY TO BEGIN", purple, 50, "medium")
 
-        button("Play", 150, 500, 100, 50, green, lightgreen, action = "Play")
-        button("Instructions", 325, 500, 150, 50, yellow, lightyellow, action = "Instructions")
-        button("Quit", 550, 500, 100, 50, red, lightred, action = "Quit")
+        button("Play", 75, 400, 100, 50, green, lightgreen, action = "Play")
+        button("Instructions", 250, 400, 150, 50, yellow, lightyellow, action = "Instructions")
+        button("Quit", 475, 400, 100, 50, red, lightred, action = "Quit")
 
         pygame.display.flip()
         clock.tick(15)
@@ -151,9 +151,9 @@ def game_over():
 
         screen.fill(black)
         message_to_screen("GAME OVER", red, -100, "large")
-        button("Play Again", 110, 500, 150, 50, green, lightgreen, action = "Play")
-        button("Main Menu", 325, 500, 150, 50, yellow, lightyellow, action = "Main Menu")
-        button("Quit", 550, 500, 150, 50, red, lightred, action = "Quit")
+        button("Play Again", 35, 400, 150, 50, green, lightgreen, action = "Play")
+        button("Main Menu", 245, 400, 150, 50, yellow, lightyellow, action = "Main Menu")
+        button("Quit", 450, 400, 150, 50, red, lightred, action = "Quit")
 
         pygame.display.flip()
         clock.tick(15)
