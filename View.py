@@ -1,5 +1,5 @@
 import pygame, sys
-import proj_updt
+import Controller
 
 pygame.init()
 
@@ -16,17 +16,17 @@ pygame.mixer.music.load('OST.mp3')
 pygame.mixer.music.play(-1)
 
 #color options
-white = (255, 255, 255)
-black = (0, 0, 0)
-lightred = (250, 40, 10)
-red = (255, 0 ,0)
-lightgreen = (50, 205, 50)
-green = (0, 100, 0)
-yellow = (255, 165, 0)
-lightyellow = (255, 255, 0)
-blue = (60, 179, 113)
-purple = (148, 0, 211)
-gray = (139, 139, 131)
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+LIGHTRED = (250, 40, 10)
+RED = (255, 0 , 0)
+LIGHTGREEN = (50, 205, 50)
+GREEN = (0, 100, 0)
+YELLOW = (255, 165, 0)
+LIGHTYELLOW = (255, 255, 0)
+BLUE = (60, 179, 113)
+PURPLE = (148, 0, 211)
+GRAY = (139, 139, 131)
 
 #font options
 smallfont = pygame.font.SysFont('serif', 25, bold=True)
@@ -79,7 +79,7 @@ def button(text, x, y, width, height, inactive_color, active_color, action = Non
                 game_instructions()
             if action == "Play" or action == "Play Again":
                 pygame.mixer.Sound('buttonpress_sfx.ogg').play()
-                proj_updt.Controller().game()
+                Controller.Controller().game()
                 #Play game Function
             if action == "Main Menu":
                 pygame.mixer.Sound('buttonpress_sfx.ogg').play()
@@ -87,7 +87,7 @@ def button(text, x, y, width, height, inactive_color, active_color, action = Non
                 start_screen()
     else:
         pygame.draw.rect(screen, inactive_color, (x, y, width, height))
-    button_word(text, black, x, y, width, height)
+    button_word(text, BLACK, x, y, width, height)
 
 def game_instructions():
     #instruction screen
@@ -98,24 +98,24 @@ def game_instructions():
                 pygame.quit()
                 quit()
 
-        screen.fill(black)
-        message_to_screen("BLOCKBUSTERS", blue, -200, "medium")
-        message_to_screen("Introduction: One morning, four plucky young CS 110", gray, -150, "small")
-        message_to_screen("students came together with the dream of recreating", gray, -120, "small")
-        message_to_screen("the classic game known as Breakout.", gray, -90, "small")
-        message_to_screen("And thus BLOCKBUSTERS was born!", gray, -60, "small")
-        message_to_screen("Instructions:", white, -10, "medium")
-        message_to_screen("Use the left and right arrows to move the paddle", gray, 40)
-        message_to_screen("Press p to pause game", gray, 70)
-        button("Play", 75, 400, 100, 50, green, lightgreen, action = "Play")
-        button("Main Menu", 250, 400, 150, 50, yellow, lightyellow, action = "Main Menu")
-        button("Quit", 475, 400, 100, 50, red, lightred, action = "Quit")
+        screen.fill(BLACK)
+        message_to_screen("BLOCKBUSTERS", BLUE, -200, "medium")
+        message_to_screen("Introduction: One morning, four plucky young CS 110", GRAY, -150, "small")
+        message_to_screen("students came together with the dream of recreating", GRAY, -120, "small")
+        message_to_screen("the classic game known as Breakout.", GRAY, -90, "small")
+        message_to_screen("And thus BLOCKBUSTERS was born!", GRAY, -60, "small")
+        message_to_screen("Instructions:", WHITE, -10, "medium")
+        message_to_screen("Use the left and right arrows to move the paddle", GRAY, 40)
+        message_to_screen("Press p to pause game", GRAY, 70)
+        button("Play", 75, 400, 100, 50, GREEN, LIGHTGREEN, action ="Play")
+        button("Main Menu", 250, 400, 150, 50, YELLOW, LIGHTYELLOW, action ="Main Menu")
+        button("Quit", 475, 400, 100, 50, RED, LIGHTRED, action ="Quit")
         pygame.display.flip()
         clock.tick(15)
 
 def pause():
     #pauses the game
-    message_to_screen("Paused", black, -100, "large")
+    message_to_screen("Paused", BLACK, -100, "large")
     paused = True
     pygame.display.flip()
     clock.tick(15)
@@ -134,15 +134,15 @@ def start_screen():
                 pygame.quit()
                 quit()
 
-        screen.fill(black)
+        screen.fill(BLACK)
         title = pygame.image.load('BLOCKBUSTERS.png')
         title = pygame.transform.scale(title, (500, 206))
         screen.blit(title, (70,35))
-        message_to_screen("PRESS PLAY TO BEGIN", purple, 50, "medsm")
+        message_to_screen("PRESS PLAY TO BEGIN", PURPLE, 50, "medsm")
 
-        button("Play", 75, 400, 100, 50, green, lightgreen, action = "Play")
-        button("Instructions", 250, 400, 150, 50, yellow, lightyellow, action = "Instructions")
-        button("Quit", 475, 400, 100, 50, red, lightred, action = "Quit")
+        button("Play", 75, 400, 100, 50, GREEN, LIGHTGREEN, action ="Play")
+        button("Instructions", 250, 400, 150, 50, YELLOW, LIGHTYELLOW, action ="Instructions")
+        button("Quit", 475, 400, 100, 50, RED, LIGHTRED, action ="Quit")
 
         pygame.display.flip()
         clock.tick(15)
@@ -157,11 +157,11 @@ def game_over():
                 pygame.quit()
                 quit()
 
-        screen.fill(black)
-        message_to_screen("GAME OVER", red, -100, "large")
-        button("Play Again", 35, 400, 150, 50, green, lightgreen, action = "Play")
-        button("Main Menu", 245, 400, 150, 50, yellow, lightyellow, action = "Main Menu")
-        button("Quit", 450, 400, 150, 50, red, lightred, action = "Quit")
+        screen.fill(BLACK)
+        message_to_screen("GAME OVER", RED, -100, "large")
+        button("Play Again", 35, 400, 150, 50, GREEN, LIGHTGREEN, action ="Play")
+        button("Main Menu", 245, 400, 150, 50, YELLOW, LIGHTYELLOW, action ="Main Menu")
+        button("Quit", 450, 400, 150, 50, RED, LIGHTRED, action ="Quit")
 
         pygame.display.flip()
         clock.tick(15)
@@ -179,5 +179,3 @@ def gamePLAY():
                 #game_over()
     pygame.quit()
     quit()
-
-#gamePLAY()
