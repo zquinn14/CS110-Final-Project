@@ -11,7 +11,6 @@ pygame.display.set_caption('Blockbusters')
 
 clock = pygame.time.Clock()
 
-#these need to be moved I think
 pygame.mixer.music.load('OST.mp3')
 pygame.mixer.music.play(-1)
 
@@ -176,6 +175,5 @@ def gamePLAY():
                 quit()
             else:
                 start_screen()
-                #game_over()
     pygame.quit()
     quit()
