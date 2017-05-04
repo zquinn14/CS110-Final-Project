@@ -2,8 +2,8 @@ import pygame, sys
 
 pygame.init()
 
-display_w = 800
-display_h = 600
+display_w = 640
+display_h = 480
 
 screen = pygame.display.set_mode((display_w, display_h))
 pygame.display.set_caption('Blockbusters')
@@ -158,15 +158,18 @@ def game_over():
         pygame.display.flip()
         clock.tick(15)
 
-gamePlay = True
-while gamePlay:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            gamePlay = False
-            pygame.quit()
-            quit()
-        else:
-            start_screen()
-            #game_over()
-pygame.quit()
-quit()
+def gamePLAY():
+    gamePlay = True
+    while gamePlay:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                gamePlay = False
+                pygame.quit()
+                quit()
+            else:
+                start_screen()
+                #game_over()
+    pygame.quit()
+    quit()
+
+#gamePLAY()
