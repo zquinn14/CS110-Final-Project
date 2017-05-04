@@ -1,4 +1,5 @@
 import pygame, sys
+import proj_updt
 
 pygame.init()
 
@@ -78,6 +79,7 @@ def button(text, x, y, width, height, inactive_color, active_color, action = Non
                 game_instructions()
             if action == "Play" or action == "Play Again":
                 pygame.mixer.Sound('buttonpress_sfx.ogg').play()
+                proj_updt.Controller().game()
                 #Play game Function
             if action == "Main Menu":
                 pygame.mixer.Sound('buttonpress_sfx.ogg').play()
@@ -96,7 +98,7 @@ def game_instructions():
                 pygame.quit()
                 quit()
 
-        screen.fill(black)        
+        screen.fill(black)
         message_to_screen("BLOCKBUSTERS", blue, -200, "medium")
         message_to_screen("Introduction: One morning, four plucky young CS 110", gray, -150, "small")
         message_to_screen("students came together with the dream of recreating", gray, -120, "small")
