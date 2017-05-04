@@ -29,6 +29,7 @@ gray = (139, 139, 131)
 
 #font options
 smallfont = pygame.font.SysFont('serif', 25, bold=True)
+medsmfont = pygame.font.SysFont('serif', 34, bold=True)
 mediumfont = pygame.font.SysFont('serif', 40, bold=True)
 largefont = pygame.font.SysFont('serif', 70, bold=True)
 
@@ -37,6 +38,8 @@ def text_objects(text, color, size):
     #called by message_to_screen, needed to write the text
     if size == "small":
         textSurface = smallfont.render(text, True, color)
+    elif size == "medsm":
+        textSurface = medsmfont.render(text, True, color)
     elif size == "medium":
         textSurface = mediumfont.render(text, True, color)
     elif size == "large":
@@ -130,8 +133,10 @@ def start_screen():
                 quit()
 
         screen.fill(black)
-        message_to_screen("BLOCKBUSTERS", blue, -100, "large")
-        message_to_screen("PRESS PLAY TO BEGIN", purple, 50, "medium")
+        title = pygame.image.load('BLOCKBUSTERS.png')
+        title = pygame.transform.scale(title, (500, 206))
+        screen.blit(title, (70,35))
+        message_to_screen("PRESS PLAY TO BEGIN", purple, 50, "medsm")
 
         button("Play", 75, 400, 100, 50, green, lightgreen, action = "Play")
         button("Instructions", 250, 400, 150, 50, yellow, lightyellow, action = "Instructions")
