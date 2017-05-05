@@ -44,13 +44,13 @@ class Paddle(pygame.sprite.Sprite):
             self.paddle_x_change = 8
 
 class Ball(pygame.sprite.Sprite):
-    speed = 8
     xcomp = 320
     ycomp = 432
     ballRadius = 8
-    def __init__(self):
+    def __init__(self, speed = 8):
         super().__init__()
         self.p = Paddle()
+        self.speed = speed
 
         self.angle = random.randrange(-45, 45)
 
@@ -110,7 +110,7 @@ class Brick(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = xcor
         self.rect.y = ycor
-
+        
     @classmethod
     def build_bricks(cls, bricks, brk_num, brk_top, allSprites):
         for i in range(5):
