@@ -1,9 +1,10 @@
 import pygame, sys
 import Controller
+import random
 
 """Created by Megan and Hayden
 Most everything in here coded by Megan,
-Hayden contributed largely to the sound portion of the code"""
+Hayden contributed largely to the sound portion of the code and the game taunt"""
 
 pygame.init()
 
@@ -161,6 +162,9 @@ def start_screen():
 def game_over():
     #this creates a game over screen
     failure = True
+    """Adds a random taunt to the game over screen - Hayden"""
+    tauntlist = ["You'll do better once you learn how to play.", "You died, and it was pretty funny.", "Aren't you used to losing by now... ?",  "Pathetic...", "You look tired. Need a break?"]
+    taunt = random.choice(tauntlist)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -170,6 +174,7 @@ def game_over():
 
         screen.fill(BLACK)
         message_to_screen("GAME OVER", RED, -100, "large")
+        message_to_screen((taunt),GRAY,-0,"medsm")
         button("Play Again", 35, 400, 150, 50, GREEN, LIGHTGREEN, action ="Play")
         button("Main Menu", 245, 400, 150, 50, YELLOW, LIGHTYELLOW, action ="Main Menu")
         button("Quit", 450, 400, 150, 50, RED, LIGHTRED, action ="Quit")
