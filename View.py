@@ -1,18 +1,21 @@
 import pygame, sys
 import Controller
 
+"""Created by Megan and Hayden
+Most everything in here coded by Megan,
+Hayden contributed largely to the sound portion of the code"""
+
 pygame.init()
 
+#Display dimensions
 display_w = 640
 display_h = 480
 
+"""Displays everything - Megan"""
 screen = pygame.display.set_mode((display_w, display_h))
 pygame.display.set_caption('Blockbusters')
 
 clock = pygame.time.Clock()
-
-pygame.mixer.music.load('OST.mp3')
-pygame.mixer.music.play(-1)
 
 #color options
 WHITE = (255, 255, 255)
@@ -33,7 +36,7 @@ medsmfont = pygame.font.SysFont('serif', 34, bold=True)
 mediumfont = pygame.font.SysFont('serif', 40, bold=True)
 largefont = pygame.font.SysFont('serif', 70, bold=True)
 
-
+"""Makes text object to display on a screen - Megan"""
 def text_objects(text, color, size):
     #called by message_to_screen, needed to write the text
     if size == "small":
@@ -46,18 +49,22 @@ def text_objects(text, color, size):
         textSurface = largefont.render(text, True, color)
     return textSurface, textSurface.get_rect()
 
+"""Puts the message on the screen - Megan"""
 def message_to_screen(message, color, y_displace=0, size = "small"):
     #puts a message on the screen
     textSurf, textRect = text_objects(message, color, size)
     textRect.center = (display_w/2), (display_h/2)+y_displace
     screen.blit(textSurf, textRect)
 
+"""Labels the button - Megan"""
 def button_word(message, color, buttonx, buttony, buttonwidth, buttonheight, y_displace=0, size='small'):
     #Puts the word on the button, called by button
     textSurf, textRect = text_objects(message, color, size)
     textRect.center = ((buttonx+(buttonwidth/2)), buttony+(buttonheight/2))
     screen.blit(textSurf, textRect)
 
+"""Creates the button and tests for mouse location on button
+-Megan"""
 def button(text, x, y, width, height, inactive_color, active_color, action = None):
     #Creates a button
     cursor = pygame.mouse.get_pos()
@@ -67,6 +74,7 @@ def button(text, x, y, width, height, inactive_color, active_color, action = Non
     if x + width > cursor[0] > x and y + height > cursor[1] > y:
         pygame.draw.rect(screen, active_color, (x, y, width, height))
         if click[0] == 1 and action != None:
+            """Hayden contributed to the sound portion to the code"""
             if action == "Quit":
                 pygame.mixer.Sound('buttonpress_sfx.ogg').play()
                 pygame.time.wait(500)
@@ -88,6 +96,7 @@ def button(text, x, y, width, height, inactive_color, active_color, action = Non
         pygame.draw.rect(screen, inactive_color, (x, y, width, height))
     button_word(text, BLACK, x, y, width, height)
 
+"""Gives game instructions to user - Megan"""
 def game_instructions():
     #instruction screen
     instructions = True
@@ -96,10 +105,10 @@ def game_instructions():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-
+        """LIterally writes instructions to the screen"""
         screen.fill(BLACK)
-        message_to_screen("BLOCKBUSTERS", BLUE, -200, "medium")
-        message_to_screen("Introduction: One morning, four plucky young CS 110", GRAY, -150, "small")
+        message_to_screen("Introduction:", WHITE, -200, "medium")
+        message_to_screen("One morning, four plucky young CS 110", GRAY, -150, "small")
         message_to_screen("students came together with the dream of recreating", GRAY, -120, "small")
         message_to_screen("the classic game known as Breakout.", GRAY, -90, "small")
         message_to_screen("And thus BLOCKBUSTERS was born!", GRAY, -60, "small")
@@ -112,6 +121,7 @@ def game_instructions():
         pygame.display.flip()
         clock.tick(15)
 
+"""Pauses the game - Megan"""
 def pause():
     #pauses the game
     message_to_screen("Paused", BLACK, -100, "large")
@@ -124,6 +134,7 @@ def pause():
                 if event.key == pygame.K_p:
                     paused = False
 
+"""Creates start screen UI - Megan"""
 def start_screen():
 #This creates a start screen
     start = True
@@ -146,6 +157,7 @@ def start_screen():
         pygame.display.flip()
         clock.tick(15)
 
+"""Creates game over screen - Megan"""
 def game_over():
     #this creates a game over screen
     failure = True
@@ -165,7 +177,10 @@ def game_over():
         pygame.display.flip()
         clock.tick(15)
 
+"""Plays the UI start screen with different paths that lead to instructions,
+the actual gameplay, and Quit - Megan"""
 def gamePLAY():
+
     gamePlay = True
     while gamePlay:
         for event in pygame.event.get():
@@ -175,5 +190,6 @@ def gamePLAY():
                 quit()
             else:
                 start_screen()
+                #game_over()
     pygame.quit()
     quit()
