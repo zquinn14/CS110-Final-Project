@@ -15,8 +15,14 @@ GREY = (100, 100, 150)
 """Controller Class runs the rest of the game - Zach and Logen"""
 class Controller(pygame.sprite.Sprite):
 
-    """Class Variables:"""
+    """PYGAME INITIALIZATION"""
+    pygame.init()
 
+    """PLAYS MUSIC - Hayden"""
+    pygame.mixer.music.load('OST.mp3')
+    pygame.mixer.music.play(-1)
+
+    """Class Variables:"""
     #Screen Dimensions
     displayDimensions = (640,480)
 
@@ -31,12 +37,6 @@ class Controller(pygame.sprite.Sprite):
         self.score = score
         self.speed = speed
 
-        """PYGAME INITIALIZATION"""
-        pygame.init()
-
-        """PLAYS MUSIC - Hayden"""
-        pygame.mixer.music.load('OST.mp3')
-        pygame.mixer.music.play(-1)
 
         """Setup of window or screen"""
         self.gameDisplay = pygame.display.set_mode(self.displayDimensions)
