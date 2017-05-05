@@ -2,6 +2,8 @@ import pygame
 import math
 import random
 
+"""Created by Zach and Logen"""
+
 """"COLORS"""
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -9,7 +11,8 @@ GREENISH = (0, 50, 50)
 BLUEISH = (0, 255, 204)
 GREY = (100, 100, 150)
 
-
+"""Use of pygame sprites created by Logen and heavily implemented by Zach"""
+"""Paddle Class creates Paddle and has function for movement"""
 class Paddle(pygame.sprite.Sprite):
     state = 0
 
@@ -32,6 +35,7 @@ class Paddle(pygame.sprite.Sprite):
         self.rect.y = 440
         self.image.fill(GREY)
 
+    """For moving paddle - Zach"""
     def movePaddle(self, key_press):
         """x = 1 is the left arrow
         x = 2 is the right arrow
@@ -43,13 +47,18 @@ class Paddle(pygame.sprite.Sprite):
         elif (key_press == 2):
             self.paddle_x_change = 8
 
+"""Ball class creates ball and has rebound and update methods
+co-created: Zach and Logen"""
 class Ball(pygame.sprite.Sprite):
+
+    #Class VAriables
     xcomp = 320
     ycomp = 432
     ballRadius = 8
     def __init__(self, speed = 8):
         super().__init__()
         self.p = Paddle()
+
         self.speed = speed
 
         self.angle = random.randrange(-45, 45)
@@ -62,11 +71,14 @@ class Ball(pygame.sprite.Sprite):
         self.rect.x = 315
         self.rect.y = 430
 
+    """This Method allows ball to rebound off at a fun angle - Logen"""
     def rebound(self, value):
         """REBOUNDS OR BOUNCES BALL OF OF WALL"""
         self.angle = (180 - self.angle) % 360
         self.angle -= value
 
+    """This Method updates position of ball
+    -Zach and Logen"""
     def update(self, state=0):
         if state == 1:
             """BALL LOCATION UPDATE"""
@@ -96,6 +108,8 @@ class Ball(pygame.sprite.Sprite):
             else:
                 return False
 
+"""Brick class creates individual bricks and has a creat bricks method
+-Zach and Logen"""
 class Brick(pygame.sprite.Sprite):
     """CLASS FOR THE CREATION OF BLOCKS"""
     #Class variable
@@ -110,7 +124,9 @@ class Brick(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = xcor
         self.rect.y = ycor
-        
+
+    """class method for building bricks, calls Brick class while creating
+    the blocks of bricks - Logen"""
     @classmethod
     def build_bricks(cls, bricks, brk_num, brk_top, allSprites):
         for i in range(5):
@@ -122,6 +138,7 @@ class Brick(pygame.sprite.Sprite):
                 allSprites.add(brick)
             brk_top += cls.height + 2
 
+"""Wall class allows for the wrap functionality of the paddle- Zach"""
 class Wall(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
         super().__init__()
