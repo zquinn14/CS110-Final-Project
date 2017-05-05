@@ -21,9 +21,10 @@ class Controller(pygame.sprite.Sprite):
     topBrick = 80
     bricksNum = 12
 
-    def __init__(self):
+    def __init__(self, score = 0, speed = 8):
         super().__init__()
-
+        self.score = score
+        self.speed = speed
         """PYGAME INITIALIZATION"""
         pygame.init()
 
@@ -41,7 +42,7 @@ class Controller(pygame.sprite.Sprite):
         self.allSprites.add(self.p)
 
         """BALL"""
-        self.b = Ball()
+        self.b = Ball(self.speed)
         self.allSprites.add(self.b)
         self.ballGroup.add(self.b)
 
@@ -63,9 +64,9 @@ class Controller(pygame.sprite.Sprite):
 
         """Initialize state value"""
         self.state = 0
-
-        """SCORE KEEPING"""
-        self.score = 0
+        #
+        # """SCORE KEEPING"""
+        # self.score = 0
 
     """MEthod that when called will bring user to start_screen - Starts UI Experience"""
     def play(self):
@@ -122,7 +123,7 @@ class Controller(pygame.sprite.Sprite):
 
             """HANDLES a WIN"""
             if len(self.bricks) == 0:
-                start_again = Controller()
+                start_again = Controller(self.score, self.speed + 2)
                 start_again.game()
 
             """PADDLE CONTROL"""
@@ -133,7 +134,7 @@ class Controller(pygame.sprite.Sprite):
                         key_press = 0
                         self.p.movePaddle(key_press)
             except UnboundLocalError:
-                start_again = Controller()
+                start_again = Controller(self.score, self.speed + 2)
                 start_again.game()
 
             keys = pygame.key.get_pressed()
@@ -173,4 +174,3 @@ class Controller(pygame.sprite.Sprite):
 if __name__ == '__main__':
     run = Controller()
     run.play()
-    
