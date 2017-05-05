@@ -2,6 +2,7 @@ import pygame
 import sys
 import View
 from Model import Paddle, Wall, Brick, Ball
+import ScoreCalc
 
 """Created by Zach and Logen"""
 
@@ -120,6 +121,7 @@ class Controller(pygame.sprite.Sprite):
             """Displays GAME OVER - Lgoen"""
             if len(self.bricks) != 0 and self.b.rect.y > 440:
                 gameExit = True
+                ScoreCalc.hScore(self.score)
                 View.game_over()
 
             """Allows Ball to rebound off bricks - and counts the score
